@@ -65,13 +65,14 @@ $ git checkout
 $ git merge
 ```
 
+### 서버에서 작업할 때
+```
+$ git -c user.name="YourName" -c user.email="YourEmail@example.com" add .  
+$ git -c user.name="YourName" -c user.email="YourEmail@example.com" commit -m "커밋 메시지"  
+$ git -c user.name="YourName" -c user.email="YourEmail@example.com" push
+```
+
 ## 공모전 링크
-#### 악성 URL 분류 AI 경진대회
-https://dacon.io/competitions/official/236451/overview/description
-
-#### 채무 불이행 여부 예측 해커톤: 불이행의 징후를 찾아라!
-https://dacon.io/competitions/official/236450/overview/description
-
 
 #### 건설공사 사고 예방 및 대응책 생성: 한솔데코 시즌3 AI 경진대회
 https://dacon.io/competitions/official/236455/overview/description
