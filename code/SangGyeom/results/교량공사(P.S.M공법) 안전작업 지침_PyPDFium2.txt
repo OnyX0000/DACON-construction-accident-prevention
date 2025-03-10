@@ -1,0 +1,1 @@
+❌ PyPDFium2 오류: 'PdfTextPage' object has no attribute 'get_text'
