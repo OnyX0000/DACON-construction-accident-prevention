@@ -23,6 +23,8 @@ DACON_-Construction_accident_prevention
 
 <p align="center">
   <b>👨‍💻 Team_MDR - We build the future! 🚀</b>
+  <a href = "https://www.notion.so/Team_MDR-19f48fd03c228085be6cfd03c73ac223?pvs=4"> Team_MDR_notion
+  </a>
 </p>
 
 
