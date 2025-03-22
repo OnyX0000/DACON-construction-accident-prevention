@@ -14,7 +14,7 @@ vectorstore = Chroma(
 )
 
 # 3. Ollama LLM 연결
-llm = ChatOllama(model="gemma:27b", temperature=0)
+llm = ChatOllama(model="gemma3:27b", temperature=0)
 
 # 4. 프롬프트 템플릿
 prompt_template = PromptTemplate(
