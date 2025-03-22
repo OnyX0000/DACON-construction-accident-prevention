@@ -5,6 +5,11 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from sentence_transformers import SentenceTransformer, util
 import json
+import torch
+
+# device 설정
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(f"Using device : {device}")
 
 # PDF → Document 불러오기
 def load_documents_from_folder(folder_path):
@@ -26,11 +31,11 @@ def split_documents(documents, chunk_size=500, chunk_overlap=50):
     )
     return splitter.split_documents(documents)
 
-# 메타데이터 태깅 함수 (선택적, 원하면 통합 가능)
+# 메타데이터 태깅 함수
 with open("data/metadata_categories.json", "r", encoding="utf-8") as f:
     metadata_dict = json.load(f)
 
-sbert_model = SentenceTransformer("jhgan/ko-sbert-nli")
+sbert_model = SentenceTransformer("jhgan/ko-sbert-nli", device = device)
 
 def tag_metadata(text, model, metadata_dict, threshold=0.3):
     tags = {}
