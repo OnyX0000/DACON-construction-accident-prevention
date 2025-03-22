@@ -23,7 +23,6 @@ prompt_template = PromptTemplate(
 You are the best construction safety expert of the world.
 Please write a **one-line countermeasure** for preventing recurrence by referring to the contents of the document below and the cause of the accident.
 If you can't find the information from the PDF document, just say that you don't know.
-You should answer in Korean.
 
 Format Conditions:
 - **One sentence**, **Centered on clear action**
