@@ -21,9 +21,15 @@ prompt_template = PromptTemplate(
     input_variables=["context", "question"],
     template="""
 You are the best construction safety expert of the world.
-Please refer to the document below and write a plan to prevent recurrence fo the cause of the accident and take action in the future.
+Please write a **one-line countermeasure** for preventing recurrence by referring to the contents of the document below and the cause of the accident.
 If you can't find the information from the PDF document, just say that you don't know.
 You should answer in Korean.
+
+Format Conditions:
+- **One sentence**, **Centered on clear action**
+- **Write in Korean**
+- It's not too long, it's a short, actionable way to get into CSV
+- Example: "Install safeguards in the fall hazard zone during complaint work"
 
 Context of the document : {context}
 
