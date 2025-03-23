@@ -6,7 +6,6 @@ from langchain_community.llms import Ollama
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
 from sentence_transformers import SentenceTransformer
-from sentence_transformers.util import cos_sim
 
 # 1. 데이터 로드
 csv_path = "data/cleaned_construction_accidents.csv"
