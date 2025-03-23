@@ -17,7 +17,7 @@ metadata_mapping = {
 }
 
 # ✅ 1. 데이터 로드
-csv_path = "data/test.csv"
+csv_path = "data/test_with_metadata.csv"
 df = pd.read_csv(csv_path)
 
 question_column = "사고원인"

@@ -3,7 +3,7 @@ import numpy as np
 import json
 
 # CSV 불러오기
-csv_path = "data/train.csv"
+csv_path = "data/test.csv"
 df = pd.read_csv(csv_path)
 
 # --------- CSV 전처리 코드 ---------
@@ -64,8 +64,17 @@ for col in metadata_columns:
         unique_metadata_values[col] = list(set(values))
 
 # 저장
-metadata_path = "data/metadata_categories.json"
+metadata_path = "data/metadata_categories_test.json"
 with open(metadata_path, "w", encoding="utf-8") as f:
     json.dump(unique_metadata_values, f, ensure_ascii=False, indent=2)
 
 metadata_path
+
+# 저장할 파일 경로
+output_path = "data/test_with_metadata.csv"
+
+# 필요한 컬럼만 포함해서 저장 (기존 컬럼 + 메타데이터 컬럼들)
+save_columns = list(df.columns) + [col for col in metadata_columns if col in df_clean.columns]
+df_clean.to_csv(output_path, columns=save_columns, index=False, encoding="utf-8-sig")
+
+print(f"✅ 저장 완료: {output_path}")
