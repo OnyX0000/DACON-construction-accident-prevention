@@ -110,6 +110,14 @@ def run_rag_inference():
 
     # 데이터 로드
     test_df = pd.read_csv(test_path, encoding='utf-8-sig')
+    
+    test_df['공사종류(대분류)'] = test_df['공사종류'].str.split(' / ').str[0]
+    test_df['공사종류(중분류)'] = test_df['공사종류'].str.split(' / ').str[1]
+    test_df['공종(대분류)'] = test_df['공종'].str.split(' > ').str[0]
+    test_df['공종(중분류)'] = test_df['공종'].str.split(' > ').str[1]
+    test_df['사고객체(대분류)'] = test_df['사고객체'].str.split(' > ').str[0]
+    test_df['사고객체(중분류)'] = test_df['사고객체'].str.split(' > ').str[1]
+
     vectordb = load_vector_db(vector_db_path)
     llm = initialize_llm()
 
