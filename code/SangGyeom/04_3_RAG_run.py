@@ -203,10 +203,10 @@ def run_rag_inference():
     # 제출 파일 생성
     submission_df = pd.DataFrame()
     submission_df['ID'] = test_ids
-    submission_df['재발방지대책'] = test_results
+    submission_df['재발방지대책 및 향후조치계획'] = test_results
     
     # 임베딩을 데이터프레임에 추가
-    embedding_cols = [f'embedding_{i}' for i in range(pred_embeddings.shape[1])]
+    embedding_cols = [f'vec_{i}' for i in range(pred_embeddings.shape[1])]
     embedding_df = pd.DataFrame(pred_embeddings, columns=embedding_cols)
     
     # 최종 제출 데이터프레임 생성
