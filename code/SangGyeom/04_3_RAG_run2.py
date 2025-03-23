@@ -77,7 +77,7 @@ def run_rag_inference():
         if not answer:
             answer = "작업자 안전교육 실시를 통한 재발 방지 대책 및 향후 조치 계획."
         
-        print("query:\n", query, "answer:\n", answer)
+        print("query:", query, "context:", context[:20], "...", context[-20:], "answer:", answer, sep='\n')
         results.append(answer)
 
     # 임베딩 생성
