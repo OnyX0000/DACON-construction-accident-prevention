@@ -3,7 +3,9 @@ import csv
 
 # 파일 경로 설정
 # modified_path = "code\JinGyu\submission.csv"
-modified_path = "data\submission\JS\Jacode_submission.csv"
+# modified_path = "data\submission\JS\Jacode_submission.csv"
+modified_path = "code/JinGyu/second_submission.csv"
+
 
 # 1. 파일 로드
 modified_df = pd.read_csv(modified_path, encoding="utf-8-sig")
