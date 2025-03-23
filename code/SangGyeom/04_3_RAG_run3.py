@@ -147,7 +147,7 @@ def generate_embeddings_and_save():
     [Part 2] 생성된 문장 파일을 열고, 임베딩을 생성 후 최종 제출 파일을 저장하는 부분
     """
     # 중간 결과 파일 경로 (생성된 문장이 저장된 파일)
-    generated_file_path = "./code/SangGyeom/data/generated_sentences.csv"
+    generated_file_path = "./code/SangGyeom/data/generated_sentences_2.csv"
     # 최종 제출 파일 경로
     submission_path = "./code/SangGyeom/data/submission0323_2.csv"
 
