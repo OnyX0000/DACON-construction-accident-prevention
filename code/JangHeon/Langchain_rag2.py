@@ -1,14 +1,14 @@
 import pandas as pd
 import os
 from tqdm import tqdm
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_community.llms import Ollama
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
 from sentence_transformers import SentenceTransformer
 
 # 1. 데이터 로드
-csv_path = "data/cleaned_construction_accidents.csv"
+csv_path = "data/test.csv"
 df = pd.read_csv(csv_path)
 
 question_column = "사고원인"
@@ -19,8 +19,8 @@ df = df.dropna(subset=[question_column] + metadata_columns)
 # 2. 모델 로딩
 embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
 sbert_model = SentenceTransformer("jhgan/ko-sbert-sts")
-vectorstore = Chroma(
-    persist_directory="data/chroma_construction_db_v2",
+vectorstore = FAISS(
+    persist_directory="code/Jaesik/20250323.faiss",
     embedding_function=embedding_model
 )
 llm = Ollama(model="gemma3:27b", temperature=0)
