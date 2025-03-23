@@ -104,7 +104,7 @@ if len(chroma_docs) == 0:
     print("저장할 문서가 없습니다. Chroma DB 저장을 중단합니다.")
 else:
     embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
-    chroma_path = "data/chroma_construction_db_v2"
+    chroma_path = "data/chroma_construction_db_v3"
 
     vectorstore = Chroma.from_documents(
         documents=chroma_docs,
