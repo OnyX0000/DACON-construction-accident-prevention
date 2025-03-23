@@ -15,7 +15,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
 
 # 2. SBERT 모델 로딩
-model = SentenceTransformer("jhgan/ko-sbert-nli", device=device)
+model = SentenceTransformer("jhgan/ko-sbert-sts", device=device)
 
 # 3. 메타데이터 기준값 로딩
 with open("data/metadata_categories.json", "r", encoding="utf-8") as f:
@@ -103,7 +103,7 @@ print("완료: tagged_pdf_paragraphs.csv 저장됨")
 if len(chroma_docs) == 0:
     print("저장할 문서가 없습니다. Chroma DB 저장을 중단합니다.")
 else:
-    embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-nli")
+    embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
     chroma_path = "data/chroma_construction_db_v2"
 
     vectorstore = Chroma.from_documents(

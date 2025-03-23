@@ -5,7 +5,7 @@ from langchain_chroma import Chroma
 from langchain_community.chat_models import ChatOllama
 
 # 1. 임베딩 모델
-embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-nli")
+embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
 
 # 2. Chroma DB 불러오기
 vectorstore = Chroma(
@@ -41,7 +41,7 @@ answer:
 # 5. RAG 체인 구성
 qa_chain = RetrievalQA.from_chain_type(
     llm=llm,
-    retriever=vectorstore.as_retriever(search_kwargs={"k": 5}),
+    retriever=vectorstore.as_retriever(search_kwargs={"k": 1}),
     chain_type="stuff",
     chain_type_kwargs={"prompt": prompt_template}
 )

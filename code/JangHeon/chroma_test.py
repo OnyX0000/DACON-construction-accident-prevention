@@ -2,7 +2,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 # 1. 임베딩 모델 로딩 (저장할 때 사용했던 동일 모델)
-embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-nli")
+embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
 
 # 2. Chroma DB 경로 지정
 chroma_path = "data/chroma_construction_db_v2"  # 폴더 존재하는지 반드시 확인!
