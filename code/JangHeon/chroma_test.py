@@ -5,7 +5,7 @@ from langchain_chroma import Chroma
 embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
 
 # 2. Chroma DB 경로 지정
-chroma_path = "data/chroma_construction_db_v2"  # 폴더 존재하는지 반드시 확인!
+chroma_path = "data/chroma_construction_db_v3"  # 폴더 존재하는지 반드시 확인!
 
 # 3. Chroma 벡터스토어 객체 다시 불러오기
 vectorstore = Chroma(
