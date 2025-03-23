@@ -6,6 +6,7 @@ from langchain_community.llms import Ollama
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
 from sentence_transformers import SentenceTransformer
+import torch
 
 # ✅ 매핑: 원본 metadata 컬럼명 → FAISS 내 키 이름
 metadata_mapping = {
@@ -26,11 +27,14 @@ metadata_columns = list(metadata_mapping.keys())
 df = df.dropna(subset=[question_column] + metadata_columns)
 
 # ✅ 2. 모델 로딩
+device = "cuda" if torch.cuda.is_available() else "cpu"
 embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
 sbert_model = SentenceTransformer("jhgan/ko-sbert-sts")
+sbert_model = sbert_model.to(device)
 vectorstore = FAISS.load_local(
-    folder_path="code/Jaesik/20250323.faiss",
-    embeddings=embedding_model
+    folder_path="code/Jaesik/db/20250323.faiss",
+    embeddings=embedding_model,
+    allow_dangerous_deserialization=True
 )
 llm = Ollama(model="gemma3:27b", temperature=0)
 
@@ -96,7 +100,7 @@ for i, (_, row) in enumerate(tqdm(df.iterrows(), total=len(df), desc="Generating
             answer = answer.split(",")[0].strip()
 
         # 768차원 임베딩
-        vector = sbert_model.encode(answer).tolist()
+        vector = sbert_model.encode(answer, device=device).tolist()
 
         result_row = {
             "사고원인": question,
