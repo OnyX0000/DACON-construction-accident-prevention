@@ -27,32 +27,35 @@ metadata_columns = list(metadata_mapping.keys())
 df = df.dropna(subset=[question_column] + metadata_columns)
 
 # ✅ 2. 모델 로딩
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")
 embedding_model = HuggingFaceEmbeddings(model_name="jhgan/ko-sbert-sts")
 sbert_model = SentenceTransformer("jhgan/ko-sbert-sts")
 sbert_model = sbert_model.to(device)
 vectorstore = FAISS.load_local(
-    folder_path="code/Jaesik/db/20250323.faiss",
+    folder_path="/home/wanted-1/potenup-workspace/Project/dacon/DACON-construction-accident-prevention/code/JaeSik/db/20250323.faiss",
     embeddings=embedding_model,
     allow_dangerous_deserialization=True
 )
 llm = Ollama(model="gemma3:27b", temperature=0)
 
-# ✅ 3. Few-shot Prompt
+# ✅ 3. Few-shot Prompt (문장 종결 강조)
 prompt_template = PromptTemplate(
     input_variables=["context", "question"] + metadata_columns,
-    template="""
-너는 건설 안전 전문가야. 아래 사고원인에 대해 참고 문서를 기반으로 한 줄짜리 재발 방지 대책을 작성해.
+    template="""\
+너는 건설 안전 전문가야. 아래 사고원인에 대해 참고 문서를 기반으로 한 줄짜리 문장으로 끝나는 재발 방지 대책을 작성해.
+**항상 완전한 문장(종결어미로 끝나는 문장) 형태**로 출력해줘. ('~다' 또는 '~습니다'로 끝나는 문장)
 
 ### 예시:
 사고원인: 고소작업 중 추락 위험이 있음에도 불구하고, 안전난간대, 안전고리 착용 등 안전장치가 미흡하였음.
-대책: 고소작업 시 추락 위험이 있는 부위에 안전장비 설치.
+대책: 고소작업 시 추락 위험이 있는 부위에 안전장비를 설치해야 한다.
 
 사고원인: 부주의
-대책: 재발 방지 대책 마련과 안전교육 실시.
+대책: 작업자에게 안전 교육을 정기적으로 시행해야 한다.
 
-사고원인: 3층 슬라브 작업시 이동중  미끄러짐
-대책: 현장자재 정리와 안전관리 철저를 통한 재발 방지 대책 및 공문 발송을 통한 향후 조치 계획.
+사고원인: 3층 슬라브 작업시 이동중 미끄러짐
+대책: 이동 경로의 자재를 정리하고 미끄럼 방지 조치를 시행해야 한다.
 
 --- 문서 내용 ---
 {context}
@@ -74,12 +77,10 @@ results = []
 
 for i, (_, row) in enumerate(tqdm(df.iterrows(), total=len(df), desc="Generating with Few-shot + Embedding")):
     question = safe_get(row, question_column)
-    reference = safe_get(row, reference_column)
-
     input_dict = {col: safe_get(row, col) for col in metadata_columns}
 
     try:
-        # 문서 검색 + OR 필터링
+        # 문서 검색 + OR 조건 필터링
         docs = vectorstore.as_retriever(search_kwargs={"k": 50}).get_relevant_documents(question)
         filtered_docs = [
             doc for doc in docs if any(
@@ -103,24 +104,34 @@ for i, (_, row) in enumerate(tqdm(df.iterrows(), total=len(df), desc="Generating
         vector = sbert_model.encode(answer, device=device).tolist()
 
         result_row = {
-            "사고원인": question,
             "answer": answer
         }
         for i in range(768):
-            result_row[f"dim_{i}"] = vector[i]
+            result_row[f"vec_{i}"] = vector[i]
 
     except Exception as e:
         result_row = {
-            "사고원인": question,
             "answer": f"[ERROR] {str(e)}"
         }
         for i in range(768):
-            result_row[f"dim_{i}"] = None
+            result_row[f"vec_{i}"] = None
 
     results.append(result_row)
 
-# ✅ 6. 저장
+# ✅ 6. 저장 (ID는 원본 index 기준, 사고원인 제외)
 os.makedirs("submission", exist_ok=True)
-submission_df = pd.DataFrame(results)
+
+submission_rows = []
+for i, (idx, row) in enumerate(zip(df.index, results)):
+    submission_row = {
+        "ID": f"TRAIN_{idx}",
+        "재발방지대책 및 향후조치계획": row["answer"]
+    }
+    for j in range(768):
+        submission_row[f"vec_{j}"] = row.get(f"vec_{j}", None)
+
+    submission_rows.append(submission_row)
+
+submission_df = pd.DataFrame(submission_rows)
 submission_df.to_csv("submission/final_submission_with_embedding.csv", index=False, encoding="utf-8-sig")
 print("✅ 최종 제출 파일 저장 완료 → submission/final_submission_with_embedding.csv")
